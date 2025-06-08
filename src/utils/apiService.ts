@@ -233,6 +233,8 @@ export const generateSpeech = async (
       model_id: "eleven_multilingual_v2", // or another model as needed
     });
 
+    console.log(audioData)
+
     const audioBlob = audioData instanceof Blob 
     ? audioData 
     : new Blob([audioData], { type: "audio/mpeg" }); // or "audio/wav" depending on your audio format
