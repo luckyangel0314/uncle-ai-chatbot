@@ -10,11 +10,15 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { json } from 'stream/consumers';
 // import { list, del } from '@vercel/blob';
+import axios from "axios";
 import { getStore } from "@netlify/blobs";
 import { ElevenLabsClient, play } from "elevenlabs";
 
 
-
+const voiceSettings = {
+  stability: 0,
+  similarity_boost: 0,
+};
 
 // Create OpenAI instance
 const openai = new OpenAI({
@@ -224,47 +228,35 @@ export const generateSpeech = async (
   text: string,
   voiceId: string = import.meta.env.VITE_VOICE_ID, // Adam voice as default
   apiKey?: string
-): Promise<Blob | null> => {
-  try{
-    // This will be implemented in milestone 2 with ElevenLabs API
-    console.log('Text to speech request:', { text, voiceId });
-    const audioData = await elevenlabs.textToSpeech.convert(voiceId, {
-      text,
-      model_id: "eleven_multilingual_v2", // or another model as needed
+)=> {
+
+  const baseUrl = "https://api.elevenlabs.io/v1/text-to-speech";
+  const headers = {
+    "Content-Type": "application/json",
+    "xi-api-key": String(import.meta.env.VITE_ELEVEN_LABS_API_KEY),
+  };
+
+  const requestBody = {
+    text,
+    voice_settings: voiceSettings,
+  };
+
+  try {
+    console.log(import.meta.env.VITE_ELEVEN_LABS_API_KEY)
+    const response = await axios.post(`${baseUrl}/${voiceId}`, requestBody, {
+      headers,
+      responseType: "blob",
     });
 
-    console.log("generated audio data")
-    console.log(audioData)
+    console.log(import.meta.env.VITE_ELEVEN_LABS_API_KEY)
 
-    const audioBlob = audioData instanceof Blob 
-    ? audioData 
-    : new Blob([audioData], { type: "audio/mpeg" }); // or "audio/wav" depending on your audio format
-
-    // Create a URL for the Blob
-    const audioUrl = URL.createObjectURL(audioBlob);
-
-    // Create audio element and set source
-    const audio = new Audio(audioUrl);
-    audio.controls = true; // optional: show controls
-    document.body.appendChild(audio); // optional: add to DOM so user can control playback
-    console.log(audio)
-    // Play the audio
-    try {
-      await audio.play();
-    } catch (err) {
-      console.error("Audio playback failed:", err);
+    if (response.status === 200) {
+      const audio = new Audio(URL.createObjectURL(response.data));
+      audio.play();
+    } else {
     }
-
-    // Cleanup URL after audio ends to free memory
-    audio.onended = () => {
-      URL.revokeObjectURL(audioUrl);
-      audio.remove();
-    };
-
-    return null;
-  }
-  catch(error){
-    console.error("Error generating speech:", error);
+  } catch (error) {
+  } finally {
   }
 };
 
@@ -299,7 +291,7 @@ export async function getChatResponse(userId: string, userInput: string, selecte
     };
     userChat.messages.push(assistantMessage);
     await updateUserChat(userId, userChat.messages, selectedCategory)
-    generateSpeech(assistantResponse)
+    generateSpeech(assistantResponse, import.meta.env.VITE_VOICE_ID)
     return assistantResponse;
   } catch (error) {
     console.error('Error:', error);
