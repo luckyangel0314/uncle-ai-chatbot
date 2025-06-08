@@ -233,6 +233,7 @@ export const generateSpeech = async (
       model_id: "eleven_multilingual_v2", // or another model as needed
     });
 
+    console.log("generated audio data")
     console.log(audioData)
 
     const audioBlob = audioData instanceof Blob 
