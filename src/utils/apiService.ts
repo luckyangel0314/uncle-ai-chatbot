@@ -1,7 +1,7 @@
 
 // API service utilities for SylhetGPT
 // This will be expanded in milestone 2 with actual API keys
-
+//https://github.com/ASHR12/elevenlabs-conversational-ai-agents/blob/master/components/VoiceAssistant.js
 
 import OpenAI from 'openai';
 import * as dotenv from 'dotenv';
@@ -228,14 +228,36 @@ export const generateSpeech = async (
   try{
     // This will be implemented in milestone 2 with ElevenLabs API
     console.log('Text to speech request:', { text, voiceId });
-    const audio = await elevenlabs.textToSpeech.convert(voiceId, {
+    const audioData = await elevenlabs.textToSpeech.convert(voiceId, {
       text,
       model_id: "eleven_multilingual_v2", // or another model as needed
     });
-    
-    // Play the audio (Node.js environment)
-      await play(audio);
-    // For now, return null to use browser speech synthesis
+
+    const audioBlob = audioData instanceof Blob 
+    ? audioData 
+    : new Blob([audioData], { type: "audio/mpeg" }); // or "audio/wav" depending on your audio format
+
+    // Create a URL for the Blob
+    const audioUrl = URL.createObjectURL(audioBlob);
+
+    // Create audio element and set source
+    const audio = new Audio(audioUrl);
+    audio.controls = true; // optional: show controls
+    document.body.appendChild(audio); // optional: add to DOM so user can control playback
+
+    // Play the audio
+    try {
+      await audio.play();
+    } catch (err) {
+      console.error("Audio playback failed:", err);
+    }
+
+    // Cleanup URL after audio ends to free memory
+    audio.onended = () => {
+      URL.revokeObjectURL(audioUrl);
+      audio.remove();
+    };
+
     return null;
   }
   catch(error){
