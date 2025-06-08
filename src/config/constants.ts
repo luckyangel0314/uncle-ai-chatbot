@@ -12,20 +12,26 @@ export const CATEGORIES = {
   culture: {
     id: 'culture',
     name: 'Culture & History',
-    icon: '🏛️',
+    icon: '📜',
     description: 'Learn about Sylheti traditions, food, festivals, and heritage'
   },
   government: {
     id: 'government', 
-    name: 'Government & Law',
-    icon: '📋',
+    name: 'Land & Inheritance Laws',
+    icon: '🏠',
     description: 'Get help with legal procedures, land laws, and documentation'
   },
   diaspora: {
     id: 'diaspora',
-    name: 'Diaspora Questions', 
+    name: 'Sylheti Diaspora Support', 
     icon: '🌍',
     description: 'Navigate life abroad while maintaining your Sylheti identity'
+  },
+  language: {
+    id: 'language',
+    name: 'Sylheti Language & Expressions', 
+    icon: '🗣️',
+    description: 'Assist to learn Sylheti Language and Expressions.'
   }
 } as const;
 

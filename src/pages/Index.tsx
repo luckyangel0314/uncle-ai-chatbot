@@ -40,14 +40,23 @@ const Index = () => {
   }, [messages]);
 
   useEffect(() => {
-    // Add welcome message
-    const welcomeMessage: Message = {
-      id: '1',
-      content: 'Assalamu Alaikum! আমি SylhetGPT, আপনার ডিজিটাল মামা। I\'m here to help you with Sylheti culture, history, land laws, and diaspora questions. আপনি কেমন আছেন? How can I help you today?',
-      sender: 'bot',
-      timestamp: new Date(),
+    const startRequest = 'From now give me one random short message such as "🐓 মুরগি যতই বড় হউক, কসাইয়ের কাছে চুপ!". I need only short message now another unnecessary sentences. Give me in bengali.';
+
+    // Alada async function define করো
+    const fetchResponse = async () => {
+      const firstResponse = await getChatResponse("default", startRequest, "government");
+      // Welcome message
+      const welcomeMessage: Message = {
+        id: '1',
+        content: firstResponse + ' \n Assalamu Alaikum! সিলেটি ভূমি বিশেষজ্ঞ-সিলেটের কণ্ঠস্বর, কৃত্রিম বুদ্ধিমত্তা দ্বারা চালিত! I know a little too much about Sylhet: culture, land, history, and family feuds since ’82. আপনি কিতা জান্তে চান মামা? Ask me anything — except who owns your cousin’s land 🙃. Tell me how I can help you today, nai? ',
+        sender: 'bot',
+        timestamp: new Date(),
+      };
+      setMessages([welcomeMessage]);
     };
-    setMessages([welcomeMessage]);
+
+    // Alada async function call করো
+    fetchResponse();
   }, []);
 
   const getCategoryPrompt = (category: Category) => {
@@ -217,9 +226,10 @@ const Index = () => {
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="backdrop-blur-md">
-              <SelectItem value="culture">🏛️ Culture & History</SelectItem>
+              <SelectItem value="culture">📜 Culture & History</SelectItem>
               <SelectItem value="government">📋 Government & Law</SelectItem>
-              <SelectItem value="diaspora">🌍 Diaspora Questions</SelectItem>
+              <SelectItem value="diaspora">🌍 Sylheti Diaspora Support</SelectItem>
+              <SelectItem value="language">🗣️ Sylheti Language & Expressions</SelectItem>
             </SelectContent>
           </Select>
         </div>
