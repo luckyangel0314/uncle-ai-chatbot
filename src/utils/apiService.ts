@@ -244,7 +244,7 @@ export const generateSpeech = async (
     const audio = new Audio(audioUrl);
     audio.controls = true; // optional: show controls
     document.body.appendChild(audio); // optional: add to DOM so user can control playback
-
+    console.log(audio)
     // Play the audio
     try {
       await audio.play();
