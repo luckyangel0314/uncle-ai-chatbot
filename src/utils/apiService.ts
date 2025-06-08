@@ -11,6 +11,7 @@ import * as path from 'path';
 import { json } from 'stream/consumers';
 // import { list, del } from '@vercel/blob';
 import { getStore } from "@netlify/blobs";
+import { ElevenLabsClient, play } from "elevenlabs";
 
 
 
@@ -19,6 +20,11 @@ import { getStore } from "@netlify/blobs";
 const openai = new OpenAI({
   apiKey: import.meta.env.VITE_OPENAI_API_KEY,
   dangerouslyAllowBrowser: true
+});
+
+
+const elevenlabs = new ElevenLabsClient({
+  apiKey: import.meta.env.VITE_ELEVEN_LABS_API_KEY,
 });
 
 let globalChatHistoryVariable=[]
@@ -215,11 +221,22 @@ export const generateSpeech = async (
   voiceId: string = 'pNInz6obpgDQGcFmaJgB', // Adam voice as default
   apiKey?: string
 ): Promise<Blob | null> => {
-  // This will be implemented in milestone 2 with ElevenLabs API
-  console.log('Text to speech request:', { text, voiceId });
-  
-  // For now, return null to use browser speech synthesis
-  return null;
+  try{
+    // This will be implemented in milestone 2 with ElevenLabs API
+    console.log('Text to speech request:', { text, voiceId });
+    const audio = await elevenlabs.textToSpeech.convert(voiceId, {
+      text,
+      model_id: "eleven_multilingual_v2", // or another model as needed
+    });
+    
+    // Play the audio (Node.js environment)
+      await play(audio);
+    // For now, return null to use browser speech synthesis
+    return null;
+  }
+  catch(error){
+    console.error("Error generating speech:", error);
+  }
 };
 
 
@@ -253,7 +270,7 @@ export async function getChatResponse(userId: string, userInput: string, selecte
     };
     userChat.messages.push(assistantMessage);
     await updateUserChat(userId, userChat.messages, selectedCategory)
-
+    generateSpeech(assistantResponse)
     return assistantResponse;
   } catch (error) {
     console.error('Error:', error);
