@@ -27,6 +27,35 @@ const elevenlabs = new ElevenLabsClient({
   apiKey: import.meta.env.VITE_ELEVEN_LABS_API_KEY,
 });
 
+console.log(elevenlabs)
+
+
+
+const apiKey = import.meta.env.VITE_ELEVEN_LABS_API_KEY; // Replace with your actual key
+const voiceId = "LruHrtVF6PSyGItzMNHS"; // Your actual voice ID
+const url = `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`;
+
+fetch(url, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "xi-api-key": apiKey,
+  },
+  body: JSON.stringify({
+    text: "Hello from ElevenLabs!",
+    model_id: "eleven_multilingual_v2"
+  }),
+})
+  .then(async (res) => {
+    if (!res.ok) {
+      throw new Error(`API error: ${res.status} ${await res.text()}`);
+    }
+    const blob = await res.blob();
+    // Do something with the audio blob (e.g., play it)
+    console.log("Audio received:", blob);
+  })
+  .catch(console.error);
+
 let globalChatHistoryVariable=[]
 
 
@@ -218,7 +247,7 @@ async function changeSystemPrompt(userId: string, category: string): Promise<Cha
 
 export const generateSpeech = async (
   text: string,
-  voiceId: string = 'pNInz6obpgDQGcFmaJgB', // Adam voice as default
+  voiceId: string = import.meta.env.VITE_VOICE_ID, // Adam voice as default
   apiKey?: string
 ): Promise<Blob | null> => {
   try{
