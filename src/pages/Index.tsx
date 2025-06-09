@@ -31,6 +31,17 @@ const Index = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
 
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition
+  } = useSpeechRecognition();
+
+  if (!browserSupportsSpeechRecognition) {
+    return <p>Your browser does not support speech recognition.</p>;
+  }
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -96,9 +107,9 @@ const Index = () => {
       setMessages(prev => [...prev, botResponse]);
       setIsLoading(false);
 
-      if (voiceEnabled) {
-        speakMessage(botResponse.content);
-      }
+      // if (voiceEnabled) {
+      //   speakMessage(botResponse.content);
+      // }
     } catch (error) {
       console.error('Error sending message:', error);
       toast.error('Failed to send message. Please try again.');
@@ -106,29 +117,29 @@ const Index = () => {
     }
   };
 
-  const speakMessage = async (text: string) => {
-    if (!voiceEnabled) return;
+  // const speakMessage = async (text: string) => {
+  //   if (!voiceEnabled) return;
 
-    setIsSpeaking(true);
+  //   setIsSpeaking(true);
 
-    // For now, use browser speech synthesis
-    // In production, this will be replaced with ElevenLabs API
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 0.9;
-    utterance.pitch = 1;
-    utterance.volume = 0.8;
+  //   // For now, use browser speech synthesis
+  //   // In production, this will be replaced with ElevenLabs API
+  //   const utterance = new SpeechSynthesisUtterance(text);
+  //   utterance.rate = 0.9;
+  //   utterance.pitch = 1;
+  //   utterance.volume = 0.8;
 
-    utterance.onend = () => {
-      setIsSpeaking(false);
-    };
+  //   utterance.onend = () => {
+  //     setIsSpeaking(false);
+  //   };
 
-    utterance.onerror = () => {
-      setIsSpeaking(false);
-      toast.error('Voice synthesis failed');
-    };
+  //   utterance.onerror = () => {
+  //     setIsSpeaking(false);
+  //     toast.error('Voice synthesis failed');
+  //   };
 
-    speechSynthesis.speak(utterance);
-  };
+  //   speechSynthesis.speak(utterance);
+  // };
 
   const startListening = () => {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
@@ -141,7 +152,7 @@ const Index = () => {
 
     recognitionRef.current.continuous = false;
     recognitionRef.current.interimResults = false;
-    recognitionRef.current.lang = 'bn-BD';
+    recognitionRef.current.lang = 'en-US';
 
     recognitionRef.current.onstart = () => {
       setIsListening(true);
