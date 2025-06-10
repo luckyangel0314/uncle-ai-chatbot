@@ -137,7 +137,7 @@ async function updateUserChat(userId: string, messages: ChatMessage[], category:
 // This function returns system category prompts.
 export const getCategorySystemPrompt = (category: string): string => {
   const prompts = {
-    government: `Language is very important. You must answer in language that user used in last chatting sentences.
+    government: `Language is very important. You must answer in language that user used in last chatting sentences.  Please ignore all previous message in langues except last user's message.
     For example, if user had chat as "hello" in english, you must answer in english not another languages.
     For another example, if user had chat as "Bonjour" in french, you must answer in french, not another languages.
     This is critical rule for you.
@@ -156,9 +156,9 @@ Always respond in the exact language the user uses to ask the question.
 If the user asks in English, respond fully in English.
 For any other language, respond in that same language.
 If the user asks about Sylheti news, provide a suitable and relevant answer about current events or news related to Sylhet.
-Always keep your responses clear, accurate, and relevant to the user's question.`,
+Always keep your responses clear, accurate, and relevant to the user's question.  Please ignore all previous message in langues except last user's message.`,
 
-    culture: `Language is very important. You must answer in language that user used in last chatting sentences.
+    culture: `Language is very important. You must answer in language that user used in last chatting sentences. Please ignore all previous message in langues except last user's message.
     For example, if user had chat as "hello" in english, you must answer in english not another languages.
     For another example, if user had chat as "Bonjour" in french, you must answer in french, not another languages.
     This is critical rule for you. 
@@ -182,9 +182,9 @@ If the user uses Bengali in last chat, respond in Bengali.
 For any other language, respond in that same language of user's last respond as well.
 You must reply in the same language the user uses to chat.
 Always keep your responses clear, accurate, and relevant to the user's question.
-- If the client asks about Sylheti news, provide a suitable and relevant answer about current events or news related to Sylhet.`,
+- If the client asks about Sylheti news, provide a suitable and relevant answer about current events or news related to Sylhet.  Please ignore all previous message in langues except last user's message.`,
 
-    diaspora: `Language is very important. You must answer in language that user used in last chatting sentences.
+    diaspora: `Language is very important. You must answer in language that user used in last chatting sentences. Please ignore all previous message in langues except last user's message.
     For example, if user had chat as "hello" in english, you must answer in english not another languages.
     For another example, if user had chat as "Bonjour" in french, you must answer in french, not another languages.
     This is critical rule for you.
@@ -207,8 +207,8 @@ If the user asks in English, respond in English.
 If the user asks in Bengali, respond in Bengali.
 For any other language, respond in that same language as well.
 Always keep your responses clear, accurate, and relevant to the user's question.
-If the client asks about Sylheti news, provide a suitable and relevant answer about current events or news related to Sylhet.`,
-    language: `Language is very important. You must answer in language that user used in last chatting sentences.
+If the client asks about Sylheti news, provide a suitable and relevant answer about current events or news related to Sylhet.  Please ignore all previous message in langues except last user's message.`,
+    language: `Language is very important. You must answer in language that user used in last chatting sentences. Please ignore all previous message in langues except last user's message.
     For example, if user had chat as "hello" in english, you must answer in english not another languages.
     For another example, if user had chat as "Bonjour" in french, you must answer in french, not another languages.
     This is critical rule for you.
@@ -229,7 +229,7 @@ If the user asks in English, respond in English.
 If the user asks in Bengali, respond in Bengali.
 For any other language, respond in that same language as well.
 Always keep your responses clear, accurate, and relevant to the user's question.
-If the client asks about Sylheti news, provide a suitable and relevant answer about current events or news related to Sylhet.`
+If the client asks about Sylheti news, provide a suitable and relevant answer about current events or news related to Sylhet.  Please ignore all previous message in langues except last user's message.`
   };
 
   return prompts[category as keyof typeof prompts] || prompts.culture;
