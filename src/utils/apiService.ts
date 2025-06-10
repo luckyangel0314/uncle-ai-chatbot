@@ -323,7 +323,7 @@ export async function getChatResponse(userId: string, userInput: string, selecte
   try {
     await changeSystemPrompt(userId, selectedCategory)
     const userChat= await getUserChat(userId);
-    userInput=userInput+".answer in language of  before one part(one before sentence)"
+    userInput=userInput+""
     // Add user message to history
     const userMessage: ChatMessage = {
       role: "user",
