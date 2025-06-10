@@ -41,7 +41,7 @@ const Index = () => {
   }, [messages]);
 
   useEffect(() => {
-    const startRequest = 'From now give me one random short message such as "🐓 মুরগি যতই বড় হউক, কসাইয়ের কাছে চুপ!". I need only short message now another unnecessary sentences.  And then after answering in bengali, please give me in language that user used in last message.';
+    const startRequest = 'From now give me one random short message such as "🐓 মুরগি যতই বড় হউক, কসাইয়ের কাছে চুপ!". I need only short message now another unnecessary sentences. Give me in bengali. After this responce, please give in english';
 
     // Alada async function define করো
     const fetchResponse = async () => {
