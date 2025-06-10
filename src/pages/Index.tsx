@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Mic, MicOff, Send, Volume2, VolumeX, Moon, Sun } from 'lucide-react';
 import { toast } from "sonner";
-import { getChatResponse } from "@/utils/apiService"
+import { generateSpeech, getChatResponse } from "@/utils/apiService"
 
 type Message = {
   id: string;
@@ -27,6 +26,7 @@ const Index = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
   const [voiceEnabled, setVoiceEnabled] = useState(true);
+  const [speakingMessageId, setSpeakingMessageId] = useState<string | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
@@ -49,7 +49,7 @@ const Index = () => {
       // Welcome message
       const welcomeMessage: Message = {
         id: '1',
-        content: firstResponse + ' \n Assalamu Alaikum! সিলেটি ভূমি বিশেষজ্ঞ-সিলেটের কণ্ঠস্বর, কৃত্রিম বুদ্ধিমত্তা দ্বারা চালিত! I know a little too much about Sylhet: culture, land, history, and family feuds since ’82. আপনি কিতা জান্তে চান মামা? Ask me anything — except who owns your cousin’s land 🙃. Tell me how I can help you today, nai? ',
+        content: `${firstResponse} \n Assalamu Alaikum! সিলেটি ভূমি বিশেষজ্ঞ-সিলেটের কণ্ঠস্বর, কৃত্রিম বুদ্ধিমত্তা দ্বারা চালিত! I know a little too much about Sylhet: culture, land, history, and family feuds since '82. আপনি কিতা জান্তে চান মামা? Ask me anything — except who owns your cousin's land 🙃. Tell me how I can help you today, nai? `,
         sender: 'bot',
         timestamp: new Date(),
       };
@@ -253,6 +253,27 @@ const Index = () => {
                 <p className={`text-xs mt-2 opacity-70 transition-opacity duration-300`}>
                   {message.timestamp.toLocaleTimeString()}
                 </p>
+                {
+                  (message.sender !== 'user') &&
+                  <Button 
+                    onClick={() => {
+                      setSpeakingMessageId(message.id);
+                      generateSpeech(message.content).finally(() => {
+                        setSpeakingMessageId(null);
+                      });
+                    }}
+                    disabled={speakingMessageId !== null && speakingMessageId !== message.id}
+                    className={`mt-2 transition-all duration-300 transform hover:scale-105 ${
+                      speakingMessageId === message.id 
+                        ? 'bg-green-600 hover:bg-green-700 text-white' 
+                        : darkMode 
+                          ? 'bg-gray-700/50 border-gray-600/50 text-green-400 hover:bg-gray-700/70 hover:border-green-400/50' 
+                          : 'bg-gray-50/50 border-gray-300/50 text-green-600 hover:bg-gray-50/70 hover:border-green-600/50'
+                    } backdrop-blur-sm shadow-lg`}
+                  >
+                    {speakingMessageId === message.id ? <Volume2 className="w-4 h-4 animate-pulse" /> : <Volume2 className="w-4 h-4" />}
+                  </Button>
+                }
               </Card>
             </div>
           ))}
