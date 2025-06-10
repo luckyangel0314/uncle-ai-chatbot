@@ -41,7 +41,7 @@ const Index = () => {
   }, [messages]);
 
   useEffect(() => {
-    const startRequest = 'From now give me one random short message such as "🐓 মুরগি যতই বড় হউক, কসাইয়ের কাছে চুপ!". I need only short message now another unnecessary sentences. Give me in bengali. And then after answering in bengali, please give me in language that user used in last message.';
+    const startRequest = 'From now give me one random short message such as "🐓 মুরগি যতই বড় হউক, কসাইয়ের কাছে চুপ!". I need only short message now another unnecessary sentences.  And then after answering in bengali, please give me in language that user used in last message.';
 
     // Alada async function define করো
     const fetchResponse = async () => {
@@ -267,10 +267,10 @@ const Index = () => {
                     }}
                     disabled={speakingMessageId !== null && speakingMessageId !== message.id}
                     className={`mt-2 transition-all duration-300 transform hover:scale-105 ${speakingMessageId === message.id
-                        ? 'bg-green-600 hover:bg-green-700 text-white'
-                        : darkMode
-                          ? 'bg-gray-700/50 border-gray-600/50 text-green-400 hover:bg-gray-700/70 hover:border-green-400/50'
-                          : 'bg-gray-50/50 border-gray-300/50 text-green-600 hover:bg-gray-50/70 hover:border-green-600/50'
+                      ? 'bg-green-600 hover:bg-green-700 text-white'
+                      : darkMode
+                        ? 'bg-gray-700/50 border-gray-600/50 text-green-400 hover:bg-gray-700/70 hover:border-green-400/50'
+                        : 'bg-gray-50/50 border-gray-300/50 text-green-600 hover:bg-gray-50/70 hover:border-green-600/50'
                       } backdrop-blur-sm shadow-lg`}
                   >
                     {speakingMessageId === message.id ? <Volume2 className="w-4 h-4 animate-pulse" /> : <Volume2 className="w-4 h-4" />}
