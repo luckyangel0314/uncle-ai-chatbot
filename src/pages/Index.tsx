@@ -257,6 +257,9 @@ const Index = () => {
                   (message.sender !== 'user') &&
                   <Button 
                     onClick={() => {
+                      // If there's already a message being spoken, don't start a new one
+                      if (speakingMessageId !== null) return;
+                      
                       setSpeakingMessageId(message.id);
                       generateSpeech(message.content).finally(() => {
                         setSpeakingMessageId(null);
