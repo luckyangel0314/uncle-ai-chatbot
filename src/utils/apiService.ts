@@ -145,7 +145,7 @@ Government documentation (passports, NIDs, certificates)
 Legal procedures and court processes
 Tax matters and government fees
 Bureaucratic navigation
- You also detect the language of the user’s message and respond in the same language.
+ You also detect the language of the user's message and respond in the same language.
 
 # Main Instructions
 - Answer about news related sylhet.
@@ -196,7 +196,7 @@ Key areas you share knowledge about:
 - Marriage customs and family traditions
 - Religious practices and cultural values
 Use affectionate terms like "বাবা", "মা", "বেটা" and share knowledge like a loving family elder.
- You also detect the language of the user’s message and respond in the same language.
+ You also detect the language of the user's message and respond in the same language.
 
 # Main Instructions
 - Answer about news related sylhet.
@@ -249,7 +249,7 @@ Key areas you help with:
 - Building community connections
 - Career and education guidance in new countries
 Speak with empathy and understanding, using encouraging phrases like "ভয় নাই", "সব ঠিক হবে", "আমরা আছি" etc.
- You also detect the language of the user’s message and respond in the same language.
+ You also detect the language of the user's message and respond in the same language.
 
 # Main Instructions
 - Answer about news related sylhet.
@@ -301,7 +301,7 @@ Key areas you help with:
 - Translating between Sylheti, Bengali, and English
 - Sharing stories, jokes, and folk sayings in Sylheti
 Always speak with warmth, patience, and humor, using affectionate terms like "বাবা", "বেটা", "মা", and explain things in a way that feels like family guidance.
- You also detect the language of the user’s message and respond in the same language.
+ You also detect the language of the user's message and respond in the same language.
 
 # Main Instructions
 - Answer about news related sylhet.
@@ -441,7 +441,7 @@ export async function getChatResponse(userId: string, userInput: string, selecte
     userChat.messages.push(userMessage);
 
     const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "gpt-4.1-mini",
       messages: userChat.messages,
     });
 
@@ -458,6 +458,88 @@ export async function getChatResponse(userId: string, userInput: string, selecte
   } catch (error) {
     console.error('Error:', error);
     return "Sorry, there was an error processing your request.";
+  }
+}
+
+// Function to process multiple images with OpenAI Vision API
+export async function processImageWithVision(userId: string, imageFiles: File[], selectedCategory: string, userText?: string): Promise<string> {
+  try {
+    await changeSystemPrompt(userId, selectedCategory);
+    const userChat = await getUserChat(userId);
+
+    // Convert images to base64
+    const base64Images = await Promise.all(
+      imageFiles.map(file => 
+        new Promise<string>((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            const base64 = reader.result as string;
+            resolve(base64.split(',')[1]); // Remove the data URL prefix
+          };
+          reader.readAsDataURL(file);
+        })
+      )
+    );
+
+    // Prepare the content array
+    const contentArray = [];
+    
+    // Add user text if provided
+    if (userText) {
+      contentArray.push({
+        type: "text",
+        text: userText
+      });
+    }
+
+    // Add images
+    base64Images.forEach(base64 => {
+      contentArray.push({
+        type: "image_url",
+        image_url: {
+          url: `data:image/jpeg;base64,${base64}`
+        }
+      });
+    });
+
+    // Add user message with images to history
+    const userMessage: ChatMessage = {
+      role: "user",
+      content: JSON.stringify(contentArray),
+      timestamp: new Date().toISOString()
+    };
+
+    userChat.messages.push(userMessage);
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4.1-mini",
+      messages: [
+        {
+          role: "system",
+          content: "You are a knowledgeable Sylheti uncle who can analyze images and provide helpful guidance. Respond in a mix of English and Sylheti/Bengali, explaining things clearly like an experienced relative would."
+        },
+        {
+          role: "user",
+          content: JSON.parse(userMessage.content)
+        }
+      ],
+      max_tokens: 500,
+      temperature: 0.7
+    });
+
+    // Add assistant response to history
+    const assistantResponse = response.choices[0]?.message?.content || "Sorry, I couldn't analyze the images.";
+    const assistantMessage: ChatMessage = {
+      role: "assistant",
+      content: assistantResponse,
+      timestamp: new Date().toISOString()
+    };
+    userChat.messages.push(assistantMessage);
+    await updateUserChat(userId, userChat.messages, selectedCategory);
+    return assistantResponse;
+  } catch (error) {
+    console.error('Error processing images:', error);
+    return "Sorry, there was an error processing your images.";
   }
 }
 

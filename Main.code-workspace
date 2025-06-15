@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../openai-react-voice-chatbot/backend/ts-ai-chatbot"
+		}
+	],
+	"settings": {}
+}
