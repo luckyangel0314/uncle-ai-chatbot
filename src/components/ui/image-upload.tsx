@@ -4,8 +4,7 @@ import { useDropzone } from "react-dropzone";
 import { Upload, X } from "lucide-react";
 import { Button } from "./button";
 import { cn } from "@/lib/utils";
-import ScreenCapture from '../ScreenCapture';
-
+import ScreenCapture from "../ScreenCapture";
 
 interface ImageUploadProps {
   onImageUpload: (files: File[]) => void;
@@ -16,17 +15,19 @@ interface ImageUploadProps {
 
 export function ImageUpload({ onImageUpload, selectedImages, setSelectedImages, className }: ImageUploadProps) {
   const [previews, setPreviews] = useState<string[]>([]);
-  const buttonRef = useRef<HTMLButtonElement>(null);
   const [showScreenCapture, setShowScreenCapture] = useState(true);
-  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  // Update previews when selectedImages changes
+  useEffect(() => {
+    const newPreviews = selectedImages.map(file => URL.createObjectURL(file));
+    setPreviews(newPreviews);
+  }, [selectedImages]);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
+    console.log("These are selected files", acceptedFiles);
     const newFiles = [...selectedImages, ...acceptedFiles];
     setSelectedImages(newFiles);
-
-    // Create previews for new files
-    const newPreviews = acceptedFiles.map(file => URL.createObjectURL(file));
-    setPreviews(prev => [...prev, ...newPreviews]);
   }, [selectedImages, setSelectedImages]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -58,7 +59,7 @@ export function ImageUpload({ onImageUpload, selectedImages, setSelectedImages, 
       {showScreenCapture && (
         <ScreenCapture
           setSelectedImages={setSelectedImages}
-          setImagePreviews={setImagePreviews}
+          setImagePreviews={setPreviews}
         />
       )}
       <div

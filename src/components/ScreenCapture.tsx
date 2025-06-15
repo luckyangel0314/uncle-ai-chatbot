@@ -64,6 +64,17 @@ export default function ScreenCapture({ setSelectedImages, setImagePreviews }: S
         }
     };
 
+    const dataURLtoFile = (dataurl, filename) => {
+        const arr = dataurl.split(',');
+        const mime = arr[0].match(/:(.*?);/)[1];
+        const bstr = atob(arr[1]);
+        let n = bstr.length;
+        const u8arr = new Uint8Array(n);
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new File([u8arr], filename, { type: mime });
+    }
 
     const takeScreenshot = async () => {
         if (!videoRef.current || !canvasRef.current || !startPos || !endPos) {
@@ -106,11 +117,15 @@ export default function ScreenCapture({ setSelectedImages, setImagePreviews }: S
         if (isSelecting) {
             return
         }
-        // Optional: trigger download automatically
-        const a = document.createElement("a");
-        a.href = img;
-        a.download = `screenshot_${Date.now()}.png`;
-        a.click();
+        // ---- Add this part ----
+        const file = dataURLtoFile(img, `screenshot_${Date.now()}.png`);
+        console.log("This is captured image file", file)
+        setSelectedImages(prev => [...prev, file]);
+        // // Optional: trigger download automatically
+        // const a = document.createElement("a");
+        // a.href = img;
+        // a.download = `screenshot_${Date.now()}.png`;
+        // a.click();
     };
 
 
@@ -133,74 +148,6 @@ export default function ScreenCapture({ setSelectedImages, setImagePreviews }: S
     const [isCapturing, setIsCapturing] = useState(false);
     const [selection, setSelection] = useState<Selection>({ x: 0, y: 0, width: 0, height: 0 });
 
-    const handleCapture = async () => {
-        if (!isCapturing) return;
-        console.log("handling capture")
-
-        try {
-            const stream = await navigator.mediaDevices.getDisplayMedia({
-                video: true
-            });
-
-            const video = document.createElement('video');
-            video.srcObject = stream;
-            await video.play();
-
-            const canvas = document.createElement('canvas');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            const ctx = canvas.getContext('2d');
-            if (!ctx) return;
-
-            ctx.drawImage(video, 0, 0);
-            console.log("Draw Image is enabled.")
-            stream.getTracks().forEach(track => track.stop());
-
-            // Create a new canvas for the selected region
-            const selectedCanvas = document.createElement('canvas');
-            selectedCanvas.width = selection.width;
-            selectedCanvas.height = selection.height;
-            const selectedCtx = selectedCanvas.getContext('2d');
-            if (!selectedCtx) return;
-
-            // Draw the selected region
-            selectedCtx.drawImage(
-                canvas,
-                selection.x,
-                selection.y,
-                selection.width,
-                selection.height,
-                0,
-                0,
-                selection.width,
-                selection.height
-            );
-
-            // Convert the selected region to a blob
-            selectedCanvas.toBlob(async (blob) => {
-                if (!blob) return;
-
-                // Create a File object from the blob
-                const file = new File([blob], `screenshot-${Date.now()}.png`, {
-                    type: 'image/png'
-                });
-
-                // Update selectedImages
-                setSelectedImages(prev => [...prev, file]);
-
-                // Create a preview URL
-                const previewUrl = URL.createObjectURL(blob);
-                setImagePreviews(prev => [...prev, previewUrl]);
-
-                // Clean up
-                setIsCapturing(false);
-                setSelection({ x: 0, y: 0, width: 0, height: 0 });
-            }, 'image/png');
-        } catch (error) {
-            console.error('Error capturing screen:', error);
-            setIsCapturing(false);
-        }
-    };
 
     // const handleMouseDown = (e: React.MouseEvent) => {
     //     if (!isCapturing) return;
@@ -374,7 +321,7 @@ export default function ScreenCapture({ setSelectedImages, setImagePreviews }: S
 
             <canvas ref={canvasRef} style={{ display: "none" }} />
 
-            {image && (
+            {image && false && (
                 <div style={{ marginTop: 20 }}>
                     <h3>Captured Image Preview:</h3>
                     <img src={image} alt="Captured region" style={{ maxWidth: "100%" }} />
