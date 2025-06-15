@@ -1,4 +1,6 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
+import { Camera } from "lucide-react";
+
 
 interface Selection {
     x: number;
@@ -262,14 +264,7 @@ export default function ScreenCapture({ setSelectedImages, setImagePreviews }: S
     return (
         <div style={{ fontFamily: "Arial, sans-serif", maxWidth: 600, margin: "auto" }}>
             <button onClick={startCapture} style={{ marginBottom: 10 }}>
-                ⏺️
-            </button>
-            <button
-                onClick={takeScreenshot}
-                // disabled={!startPos || !endPos}
-                style={{ marginLeft: 10, marginBottom: 10 }}
-            >
-                🖼️
+                <Camera size={24} color="red" />
             </button>
 
             <div

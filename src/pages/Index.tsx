@@ -367,7 +367,7 @@ export default function Index() {
 
         <div className="w-full max-w-4xl mx-auto p-4 space-y-4">
           {showImageUpload && (
-            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg p-4 shadow-lg border border-gray-200 dark:border-gray-700">
+            <div className={`backdrop-blur-sm rounded-lg p-4 shadow-lg border border-gray-200 dark:border-gray-700 ${darkMode ? 'bg-gray-800/80 border-gray-700/50' : 'bg-white/80 border-gray-200/50'}`}>
               <ImageUpload
                 onImageUpload={handleImageUpload}
                 selectedImages={selectedImages}
