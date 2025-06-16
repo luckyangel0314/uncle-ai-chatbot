@@ -121,7 +121,7 @@ export default function Index() {
 
         setMessages(prev => [...prev, botMessage]);
       } else {
-        const response = await getChatResponse("default", inputText.trim()+" please response in "+responseLanguage, selectedCategory+" and do not say that I will respond english. please answer my before question.");
+        const response = await getChatResponse("default", inputText.trim()+" Respond to my previous question in "+responseLanguage+", no need to mention language.");
         const botMessage: Message = {
           id: (Date.now() + 1).toString(),
           content: response,
