@@ -24,6 +24,7 @@ type Category = 'government' | 'culture' | 'diaspora';
 
 export default function Index() {
   const [messages, setMessages] = useState<Message[]>([]);
+  const [responseLanguage, setResponseLanguage] = useState('');
   const [inputText, setInputText] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<Category>('culture');
   const [isListening, setIsListening] = useState(false);
@@ -86,32 +87,17 @@ export default function Index() {
     if (!inputText.trim() && selectedImages.length === 0 || text=="") return;
     setShowImageUpload(false)
     handleImageUpload(selectedImages)
-    if(text==""){
-      const newMessage: Message = {
-        id: Date.now().toString(),
-        content: text,
-        sender: 'user',
-        timestamp: new Date(),
-        category: selectedCategory,
-        images: selectedImages.map(file => URL.createObjectURL(file)),
-        role: 'user'
-      };
+    const newMessage: Message = {
+      id: Date.now().toString(),
+      content: inputText.trim(),
+      sender: 'user',
+      timestamp: new Date(),
+      category: selectedCategory,
+      images: selectedImages.map(file => URL.createObjectURL(file)),
+      role: 'user'
+    };
 
-      setMessages(prev => [...prev, newMessage]);
-    }
-    else{
-      const newMessage: Message = {
-        id: Date.now().toString(),
-        content: inputText.trim(),
-        sender: 'user',
-        timestamp: new Date(),
-        category: selectedCategory,
-        images: selectedImages.map(file => URL.createObjectURL(file)),
-        role: 'user'
-      };
-
-      setMessages(prev => [...prev, newMessage]);
-    }
+    setMessages(prev => [...prev, newMessage]);
     setInputText('');
 
     try {
@@ -135,7 +121,7 @@ export default function Index() {
 
         setMessages(prev => [...prev, botMessage]);
       } else {
-        const response = await getChatResponse("default", inputText.trim(), selectedCategory);
+        const response = await getChatResponse("default", inputText.trim()+" please response in "+responseLanguage, selectedCategory);
         const botMessage: Message = {
           id: (Date.now() + 1).toString(),
           content: response,
@@ -384,12 +370,11 @@ export default function Index() {
         </div>
 
         <div className="w-full max-w-4xl mx-auto p-4 space-y-4">
-          {chattingCount === 0 && (
+          {responseLanguage === "" && (
             <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
               <button
                 onClick={async () => {
-                  setInputText("english");
-                  await handleSendMessage();
+                  setResponseLanguage("english");
                 }}
                 className={`transition-all duration-300 transform hover:scale-105 ${
                   darkMode
@@ -398,12 +383,11 @@ export default function Index() {
                 } text-white shadow-lg disabled:transform-none disabled:hover:scale-100`}
                 style={{ margin: "3px", padding: "5px", borderRadius: "3px"}}
               >
-                english
+                what is up?
               </button>
               <button
                 onClick={async () => {
-                  setInputText("bangladesh");
-                  await handleSendMessage();
+                  setResponseLanguage("bangladesh");
                 }}
                 className={`transition-all duration-300 transform hover:scale-105 ${
                   darkMode
@@ -412,7 +396,7 @@ export default function Index() {
                 } text-white shadow-lg disabled:transform-none disabled:hover:scale-100`}
                 style={{ margin: "3px", padding: "5px", borderRadius: "3px"}}
               >
-                Bangladesh
+                কি খবর?
               </button>
             </div>
           )}
