@@ -255,7 +255,7 @@ Example instructions for the chatbot:
 `+ common_prompt+language_prompt
   };
 
-  return prompts[category as keyof typeof prompts] || prompts.homework;
+  return prompts[category as keyof typeof prompts] ;
 };
 
 
