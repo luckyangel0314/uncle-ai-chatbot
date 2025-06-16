@@ -1,3 +1,4 @@
+import React from 'react'
 import { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -55,7 +56,7 @@ export default function Index() {
       const firstResponse = await getChatResponse("default", startRequest, "government");
       const welcomeMessage: Message = {
         id: '1',
-        content: `${firstResponse} \n Assalamu Alaikum! সিলেটি ভূমি বিশেষজ্ঞ-সিলেটের কণ্ঠস্বর, কৃত্রিম বুদ্ধিমত্তা দ্বারা চালিত! What is up? `,
+        content: `${firstResponse} \n Assalamu Alaikum! সিলেটি ভূমি বিশেষজ্ঞ-সিলেটের কণ্ঠস্বর, কৃত্রিম বুদ্ধিমত্তা দ্বারা চালিত! Which language are you going to use? `,
         sender: 'bot',
         timestamp: new Date(),
       };
@@ -81,21 +82,36 @@ export default function Index() {
     setImagePreviews(previews);
   };
 
-  const handleSendMessage = async () => {
-    if (!inputText.trim() && selectedImages.length === 0) return;
+  const handleSendMessage = async (text: string) => {
+    if (!inputText.trim() && selectedImages.length === 0 || text=="") return;
     setShowImageUpload(false)
     handleImageUpload(selectedImages)
-    const newMessage: Message = {
-      id: Date.now().toString(),
-      content: inputText.trim(),
-      sender: 'user',
-      timestamp: new Date(),
-      category: selectedCategory,
-      images: selectedImages.map(file => URL.createObjectURL(file)),
-      role: 'user'
-    };
+    if(text==""){
+      const newMessage: Message = {
+        id: Date.now().toString(),
+        content: text,
+        sender: 'user',
+        timestamp: new Date(),
+        category: selectedCategory,
+        images: selectedImages.map(file => URL.createObjectURL(file)),
+        role: 'user'
+      };
 
-    setMessages(prev => [...prev, newMessage]);
+      setMessages(prev => [...prev, newMessage]);
+    }
+    else{
+      const newMessage: Message = {
+        id: Date.now().toString(),
+        content: inputText.trim(),
+        sender: 'user',
+        timestamp: new Date(),
+        category: selectedCategory,
+        images: selectedImages.map(file => URL.createObjectURL(file)),
+        role: 'user'
+      };
+
+      setMessages(prev => [...prev, newMessage]);
+    }
     setInputText('');
 
     try {
@@ -130,6 +146,7 @@ export default function Index() {
         };
         setMessages(prev => [...prev, botMessage]);
       }
+      setChattingCount(chattingCount+1)
     } catch (error) {
       console.error('Error processing message:', error);
       const errorMessage: Message = {
@@ -367,10 +384,105 @@ export default function Index() {
         </div>
 
         <div className="w-full max-w-4xl mx-auto p-4 space-y-4">
-          {/* if( chattingCount==0){ */}
-          <button onClick={() => {setInputText("english") handleSendMessage()}} className="">english</button>
-          <button onClick={() => {setInputText("bangladesh") handleSendMessage() }} className="">Bangladesh</button>
-          {/* } */}
+          {chattingCount === 0 && (
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+              <button
+                onClick={async () => {
+                  setInputText("english");
+                  await handleSendMessage();
+                }}
+                className={`transition-all duration-300 transform hover:scale-105 ${
+                  darkMode
+                    ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-green-500/30"
+                    : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-400/30"
+                } text-white shadow-lg disabled:transform-none disabled:hover:scale-100`}
+                style={{ margin: "3px", padding: "5px", borderRadius: "3px"}}
+              >
+                english
+              </button>
+              <button
+                onClick={async () => {
+                  setInputText("bangladesh");
+                  await handleSendMessage();
+                }}
+                className={`transition-all duration-300 transform hover:scale-105 ${
+                  darkMode
+                    ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-green-500/30"
+                    : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-400/30"
+                } text-white shadow-lg disabled:transform-none disabled:hover:scale-100`}
+                style={{ margin: "3px", padding: "5px", borderRadius: "3px"}}
+              >
+                Bangladesh
+              </button>
+            </div>
+          )}
+
+          {chattingCount == 1 && (
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+              <button
+                onClick={async () => {
+                  setInputText("You are a homework assistor.");
+                  await handleSendMessage();
+                }}
+                className={`transition-all duration-300 transform hover:scale-105 ${
+                  darkMode
+                    ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-green-500/30"
+                    : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-400/30"
+                } text-white shadow-lg disabled:transform-none disabled:hover:scale-100`}
+                style={{ margin: "3px", padding: "5px", borderRadius: "3px"}}
+              >
+                You are a homework assistor.
+              </button>
+              <button
+                onClick={async () => {
+                  setInputText("You are an officer.");
+                  await handleSendMessage();
+                }}
+                className={`transition-all duration-300 transform hover:scale-105 ${
+                  darkMode
+                    ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-green-500/30"
+                    : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-400/30"
+                } text-white shadow-lg disabled:transform-none disabled:hover:scale-100`}
+                style={{ margin: "3px", padding: "5px", borderRadius: "3px"}}
+              >
+                You are an officer.
+              </button>
+            </div>
+          )}
+
+          {chattingCount != 0 &&chattingCount != 1 && (
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+              <button
+                onClick={async () => {
+                  setInputText("Give me news about sylheti");
+                  await handleSendMessage();
+                }}
+                className={`transition-all duration-300 transform hover:scale-105 ${
+                  darkMode
+                    ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-green-500/30"
+                    : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-400/30"
+                } text-white shadow-lg disabled:transform-none disabled:hover:scale-100`}
+                style={{ margin: "3px", padding: "5px", borderRadius: "3px"}}
+              >
+                Give me news about sylheti
+              </button>
+              <button
+                onClick={async () => {
+                  setInputText("What is happend in sylheti?");
+                  await handleSendMessage();
+                }}
+                className={`transition-all duration-300 transform hover:scale-105 ${
+                  darkMode
+                    ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-green-500/30"
+                    : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-400/30"
+                } text-white shadow-lg disabled:transform-none disabled:hover:scale-100`}
+                style={{ margin: "3px", padding: "5px", borderRadius: "3px"}}
+              >
+                What is happend in sylheti?
+              </button>
+            </div>
+          )}
+
           {showImageUpload && (
             <div className={`backdrop-blur-sm rounded-lg p-4 shadow-lg border border-gray-200 dark:border-gray-700 ${darkMode ? 'bg-gray-800/80 border-gray-700/50' : 'bg-white/80 border-gray-200/50'}`}>
               <ImageUpload
