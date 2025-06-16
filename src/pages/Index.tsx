@@ -54,7 +54,7 @@ export default function Index() {
       const firstResponse = await getChatResponse("default", startRequest, "government");
       const welcomeMessage: Message = {
         id: '1',
-        content: `${firstResponse} \n Assalamu Alaikum! সিলেটি ভূমি বিশেষজ্ঞ-সিলেটের কণ্ঠস্বর, কৃত্রিম বুদ্ধিমত্তা দ্বারা চালিত! I know a little too much about Sylhet: culture, land, history, and family feuds since '82. আপনি কিতা জান্তে চান মামা? Ask me anything — except who owns your cousin's land 🙃. Tell me how I can help you today, nai? `,
+        content: `${firstResponse} \n Assalamu Alaikum! সিলেটি ভূমি বিশেষজ্ঞ-সিলেটের কণ্ঠস্বর, কৃত্রিম বুদ্ধিমত্তা দ্বারা চালিত! What is up? `,
         sender: 'bot',
         timestamp: new Date(),
       };
