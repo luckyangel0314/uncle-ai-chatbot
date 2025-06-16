@@ -342,37 +342,22 @@ async function queryPerplexityAPI(
   model = 'llama-3.1-sonar-small-128k-online'
 ): Promise<string> {
   try {
-    const response = await fetch(import.meta.env.VITE_SERVER_URL+'chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        messages: messages.map(({ role, content }) => ({ role, content })),
+    const response = await axios.post(
+      `${import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000'}/chat`,
+      {
+        messages,
         model
-      }),
-    });
-
-    if (!response.ok) {
-      if (response.status === 401) {
-        return "Error: Invalid API key. Please check your Perplexity API key.";
-      } else if (response.status === 429) {
-        return "Error: Rate limit exceeded. Please try again later.";
-      } else {
-        const errorData = await response.json();
-        return `Error: ${errorData.error?.message || 'Unknown error'}`;
       }
+    );
+
+    if (response.data.choices && response.data.choices.length > 0) {
+      return response.data.choices[0].message.content;
+    } else {
+      throw new Error('No response from API');
     }
-
-    const data = await response.json();
-
-    if (!data.choices || !data.choices[0]?.message?.content) {
-      throw new Error('Invalid response format from Perplexity API');
-    }
-
-    return data.choices[0].message.content;
-
   } catch (error) {
-    console.error('Perplexity API error:', error);
-    return "Sorry, there was an error processing your request. Please try again.";
+    console.error('Error querying Perplexity API:', error);
+    throw error;
   }
 }
 
