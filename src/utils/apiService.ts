@@ -342,7 +342,7 @@ async function queryPerplexityAPI(
   model = 'llama-3.1-sonar-small-128k-online'
 ): Promise<string> {
   try {
-    const response = await fetch(import.meta.env.VITE_SERVER_URL+'schat', {
+    const response = await fetch(import.meta.env.VITE_SERVER_URL+'chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
