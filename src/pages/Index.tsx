@@ -410,18 +410,19 @@ export default function Index() {
                     <Mic className="h-5 w-5" />
                   </Button>
                 )}
+                <Button
+                  onClick={handleSendMessage}
+                  disabled={isLoading || (!inputText.trim() && selectedImages.length === 0)}
+                  className={`transition-all duration-300 transform hover:scale-105 ${darkMode
+                    ? 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-green-500/30'
+                    : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-400/30'
+                    } text-white shadow-lg disabled:transform-none disabled:hover:scale-100`}
+                >
+                  <Send className="h-5 w-5" />
+                </Button>
               </div>
             </div>
-            <Button
-              onClick={handleSendMessage}
-              disabled={isLoading || (!inputText.trim() && selectedImages.length === 0)}
-              className={`transition-all duration-300 transform hover:scale-105 ${darkMode
-                ? 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-green-500/30'
-                : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-400/30'
-                } text-white shadow-lg disabled:transform-none disabled:hover:scale-100`}
-            >
-              <Send className="h-5 w-5" />
-            </Button>
+            
           </div>
 
           <p className={`text-xs mt-2 transition-all duration-300 ${darkMode ? 'text-gray-400' : 'text-gray-600'} text-center ${isSpeaking ? 'animate-pulse' : ''}`}>
