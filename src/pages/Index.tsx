@@ -400,139 +400,141 @@ export default function Index() {
               </button>
             </div>
           )}
-
-          {chattingCount == 1 && (
-            <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-              <button
-                onClick={async () => {
-                  setInputText("You are a homework assistor.");
-                  await handleSendMessage();
-                }}
-                className={`transition-all duration-300 transform hover:scale-105 ${
-                  darkMode
-                    ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-green-500/30"
-                    : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-400/30"
-                } text-white shadow-lg disabled:transform-none disabled:hover:scale-100`}
-                style={{ margin: "3px", padding: "5px", borderRadius: "3px"}}
-              >
-                You are a homework assistor.
-              </button>
-              <button
-                onClick={async () => {
-                  setInputText("You are an officer.");
-                  await handleSendMessage();
-                }}
-                className={`transition-all duration-300 transform hover:scale-105 ${
-                  darkMode
-                    ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-green-500/30"
-                    : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-400/30"
-                } text-white shadow-lg disabled:transform-none disabled:hover:scale-100`}
-                style={{ margin: "3px", padding: "5px", borderRadius: "3px"}}
-              >
-                You are an officer.
-              </button>
-            </div>
-          )}
-
-          {chattingCount != 0 &&chattingCount != 1 && (
-            <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-              <button
-                onClick={async () => {
-                  setInputText("Give me news about sylheti");
-                  await handleSendMessage();
-                }}
-                className={`transition-all duration-300 transform hover:scale-105 ${
-                  darkMode
-                    ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-green-500/30"
-                    : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-400/30"
-                } text-white shadow-lg disabled:transform-none disabled:hover:scale-100`}
-                style={{ margin: "3px", padding: "5px", borderRadius: "3px"}}
-              >
-                Give me news about sylheti
-              </button>
-              <button
-                onClick={async () => {
-                  setInputText("What is happend in sylheti?");
-                  await handleSendMessage();
-                }}
-                className={`transition-all duration-300 transform hover:scale-105 ${
-                  darkMode
-                    ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-green-500/30"
-                    : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-400/30"
-                } text-white shadow-lg disabled:transform-none disabled:hover:scale-100`}
-                style={{ margin: "3px", padding: "5px", borderRadius: "3px"}}
-              >
-                What is happend in sylheti?
-              </button>
-            </div>
-          )}
-
-          {showImageUpload && (
-            <div className={`backdrop-blur-sm rounded-lg p-4 shadow-lg border border-gray-200 dark:border-gray-700 ${darkMode ? 'bg-gray-800/80 border-gray-700/50' : 'bg-white/80 border-gray-200/50'}`}>
-              <ImageUpload
-                onImageUpload={handleImageUpload}
-                selectedImages={selectedImages}
-                setSelectedImages={setSelectedImages}
-              />
-            </div>
-          )}
-
-          <div className="flex items-end gap-2">
-            <div className="flex-1 relative">
-              <textarea
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                placeholder="Ask your digital uncle anything... আমাকে কিছু জিজ্ঞেস করুন"
-                onKeyPress={handleKeyPress}
-                disabled={isLoading}
-                className={`w-full min-h-[60px] max-h-[200px] p-4 rounded-lg border transition-all duration-300 focus:scale-[1.02] ${darkMode
-                  ? 'bg-gray-700/50 border-gray-600/50 text-green-300 placeholder-gray-400 focus:bg-gray-700/70'
-                  : 'bg-gray-50/50 border-gray-300/50 text-gray-800 placeholder-gray-500 focus:bg-gray-50/70'
-                  } backdrop-blur-sm`}
-              />
-              <div className="absolute right-2 bottom-2 flex gap-2">
-                <Button
-                  onClick={() => setShowImageUpload(!showImageUpload)}
-                  variant="ghost"
-                  size="icon"
-                  className={`hover:bg-gray-200/50 dark:hover:bg-gray-700/50 ${showImageUpload ? 'text-green-500' : 'text-gray-500'
-                    }`}
-                >
-                  <ImageIcon className="h-5 w-5" />
-                </Button>
-                {voiceEnabled && (
-                  <Button
-                    onClick={isListening ? stopListening : startListening}
-                    variant="ghost"
-                    size="icon"
-                    className={`hover:bg-gray-200/50 dark:hover:bg-gray-700/50 ${isListening ? 'text-red-500 animate-pulse' : 'text-gray-500'
-                      }`}
-                  >
-                    <Mic className="h-5 w-5" />
-                  </Button>
-                )}
-                <Button
-                  onClick={handleSendMessage}
-                  disabled={isLoading || (!inputText.trim() && selectedImages.length === 0)}
-                  className={`transition-all duration-300 transform hover:scale-105 ${darkMode
-                    ? 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-green-500/30'
-                    : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-400/30'
+          {responseLanguage === "" && (
+            <div>
+              {chattingCount == 1 && (
+                <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                  <button
+                    onClick={async () => {
+                      setInputText("You are a homework assistor.");
+                      await handleSendMessage();
+                    }}
+                    className={`transition-all duration-300 transform hover:scale-105 ${
+                      darkMode
+                        ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-green-500/30"
+                        : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-400/30"
                     } text-white shadow-lg disabled:transform-none disabled:hover:scale-100`}
-                >
-                  <Send className="h-5 w-5" />
-                </Button>
-              </div>
-            </div>
-            
-          </div>
+                    style={{ margin: "3px", padding: "5px", borderRadius: "3px"}}
+                  >
+                    You are a homework assistor.
+                  </button>
+                  <button
+                    onClick={async () => {
+                      setInputText("You are an officer.");
+                      await handleSendMessage();
+                    }}
+                    className={`transition-all duration-300 transform hover:scale-105 ${
+                      darkMode
+                        ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-green-500/30"
+                        : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-400/30"
+                    } text-white shadow-lg disabled:transform-none disabled:hover:scale-100`}
+                    style={{ margin: "3px", padding: "5px", borderRadius: "3px"}}
+                  >
+                    You are an officer.
+                  </button>
+                </div>
+              )}
 
-          <p className={`text-xs mt-2 transition-all duration-300 ${darkMode ? 'text-gray-400' : 'text-gray-600'} text-center ${isSpeaking ? 'animate-pulse' : ''}`}>
-            {isSpeaking ? '🔊 Uncle is speaking...' : 'Type your message or click the mic to speak'}
-          </p>
+              {chattingCount != 0 &&chattingCount != 1 && (
+                <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                  <button
+                    onClick={async () => {
+                      setInputText("Give me news about sylheti");
+                      await handleSendMessage();
+                    }}
+                    className={`transition-all duration-300 transform hover:scale-105 ${
+                      darkMode
+                        ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-green-500/30"
+                        : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-400/30"
+                    } text-white shadow-lg disabled:transform-none disabled:hover:scale-100`}
+                    style={{ margin: "3px", padding: "5px", borderRadius: "3px"}}
+                  >
+                    Give me news about sylheti
+                  </button>
+                  <button
+                    onClick={async () => {
+                      setInputText("What is happend in sylheti?");
+                      await handleSendMessage();
+                    }}
+                    className={`transition-all duration-300 transform hover:scale-105 ${
+                      darkMode
+                        ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-green-500/30"
+                        : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-400/30"
+                    } text-white shadow-lg disabled:transform-none disabled:hover:scale-100`}
+                    style={{ margin: "3px", padding: "5px", borderRadius: "3px"}}
+                  >
+                    What is happend in sylheti?
+                  </button>
+                </div>
+              )}
+
+              {showImageUpload && (
+                <div className={`backdrop-blur-sm rounded-lg p-4 shadow-lg border border-gray-200 dark:border-gray-700 ${darkMode ? 'bg-gray-800/80 border-gray-700/50' : 'bg-white/80 border-gray-200/50'}`}>
+                  <ImageUpload
+                    onImageUpload={handleImageUpload}
+                    selectedImages={selectedImages}
+                    setSelectedImages={setSelectedImages}
+                  />
+                </div>
+              )}
+
+              <div className="flex items-end gap-2">
+                <div className="flex-1 relative">
+                  <textarea
+                    value={inputText}
+                    onChange={(e) => setInputText(e.target.value)}
+                    placeholder="Ask your digital uncle anything... আমাকে কিছু জিজ্ঞেস করুন"
+                    onKeyPress={handleKeyPress}
+                    disabled={isLoading}
+                    className={`w-full min-h-[60px] max-h-[200px] p-4 rounded-lg border transition-all duration-300 focus:scale-[1.02] ${darkMode
+                      ? 'bg-gray-700/50 border-gray-600/50 text-green-300 placeholder-gray-400 focus:bg-gray-700/70'
+                      : 'bg-gray-50/50 border-gray-300/50 text-gray-800 placeholder-gray-500 focus:bg-gray-50/70'
+                      } backdrop-blur-sm`}
+                  />
+                  <div className="absolute right-2 bottom-2 flex gap-2">
+                    <Button
+                      onClick={() => setShowImageUpload(!showImageUpload)}
+                      variant="ghost"
+                      size="icon"
+                      className={`hover:bg-gray-200/50 dark:hover:bg-gray-700/50 ${showImageUpload ? 'text-green-500' : 'text-gray-500'
+                        }`}
+                    >
+                      <ImageIcon className="h-5 w-5" />
+                    </Button>
+                    {voiceEnabled && (
+                      <Button
+                        onClick={isListening ? stopListening : startListening}
+                        variant="ghost"
+                        size="icon"
+                        className={`hover:bg-gray-200/50 dark:hover:bg-gray-700/50 ${isListening ? 'text-red-500 animate-pulse' : 'text-gray-500'
+                          }`}
+                      >
+                        <Mic className="h-5 w-5" />
+                      </Button>
+                    )}
+                    <Button
+                      onClick={handleSendMessage}
+                      disabled={isLoading || (!inputText.trim() && selectedImages.length === 0)}
+                      className={`transition-all duration-300 transform hover:scale-105 ${darkMode
+                        ? 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-green-500/30'
+                        : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-400/30'
+                        } text-white shadow-lg disabled:transform-none disabled:hover:scale-100`}
+                    >
+                      <Send className="h-5 w-5" />
+                    </Button>
+                  </div>
+                </div>
+                
+              </div>
+
+              <p className={`text-xs mt-2 transition-all duration-300 ${darkMode ? 'text-gray-400' : 'text-gray-600'} text-center ${isSpeaking ? 'animate-pulse' : ''}`}>
+                {isSpeaking ? '🔊 Uncle is speaking...' : 'Type your message or click the mic to speak'}
+              </p>
+            </div>
+          )}
+          
         </div>
       </div>
-
-
     </div>
   );
 }
