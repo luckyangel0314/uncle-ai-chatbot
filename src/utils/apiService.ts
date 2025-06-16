@@ -25,6 +25,9 @@ const openai = new OpenAI({
   dangerouslyAllowBrowser: true
 });
 
+const PERPLEXITY_API_KEY = import.meta.env.VITE_PERPLEXITY_API_KEY;
+const PERPLEXITY_API_URL = 'https://api.perplexity.ai/v1/chat/completions';
+
 
 const elevenlabs = new ElevenLabsClient({
   apiKey: import.meta.env.VITE_ELEVEN_LABS_API_KEY,
@@ -154,23 +157,6 @@ export const getCategorySystemPrompt = (category: string, language: string): str
     Build logic to prioritize Q&A rhythm over monologue-style outputs.
     - Maintain a helpful, clear, and polite tone.
     - Let’s finalize Sylhet with an emphasis on SUST, MC College, and the British-Bangla diaspora. Bring in cultural elements, tea-region pride, and viral campus moments. Include Sylhet’s historical significance, current news, and diaspora updates from London, Birmingham, etc.
-    -This AI should feel like home:
-    For students (homework help, tutoring)
-    For parents (daily Sylhet news, education help)
-    For teachers (research & reference)
-    For everyone who wants to learn, explore, and grow
-    -When user upload image, do not answer shortly. Please describe detail so that user can understood it all.
-    Help students understand, not just give answers with Verified facts, clear logic, and simple breakdowns.
-    Please answer about all subjects, including:
-    Cover all subjects, including:
-    English
-    Math
-    Science (Physics, Chemistry, Biology)
-    History (Global, South Asian, Sylheti)
-    Civics, Geography, General Knowledge
-    Computer Science, Logic, Programming
-    Bangla language, grammar, literature
-    Higher Ed: Economics, Finance, Engineering, Law, Medical, etc.
     -Please answer in first such as "Sure, I can help. What’s your topic?"
 
     # Parameters
@@ -351,6 +337,35 @@ export const generateSpeech = async (
 
 
 
+// Helper to send chat messages to Perplexity API
+async function queryPerplexityAPI(messages: ChatMessage[], model = 'llama-3.1-sonar-small-128k-online'): Promise<string> {
+  try {
+    const response = await axios.post(
+      PERPLEXITY_API_URL,
+      {
+        model,
+        messages: messages.map(({ role, content }) => ({ role, content })),
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${PERPLEXITY_API_KEY}`,
+        },
+      }
+    );
+
+    const assistantMessage = response.data.choices?.[0]?.message?.content;
+    return assistantMessage ?? "Sorry, I couldn't generate a response.";
+  } catch (error) {
+    console.error('Perplexity API error:', error);
+    return "Sorry, there was an error processing your request.";
+  }
+}
+
+
+
+
+
 // Function to get response from OpenAI
 export async function getChatResponse(userId: string, userInput: string, selectedCategory: string, selectedLanguage: string): Promise<string> {
   try {
@@ -367,10 +382,16 @@ export async function getChatResponse(userId: string, userInput: string, selecte
 
     userChat.messages.push(userMessage);
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4.1-mini",
-      messages: userChat.messages,
-    });
+    let response=""
+    if(selectedCategory=="news"){
+      response = await queryPerplexityAPI(userChat.messages);
+    }
+    else{
+      response = await openai.chat.completions.create({
+        model: "gpt-4.1-mini",
+        messages: userChat.messages,
+      });
+    }
 
     // Add assistant response to history
     const assistantResponse = response.choices[0]?.message?.content || "Sorry, I couldn't generate a response.";
