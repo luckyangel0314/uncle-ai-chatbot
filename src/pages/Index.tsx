@@ -400,7 +400,7 @@ export default function Index() {
               </button>
             </div>
           )}
-          {responseLanguage === "" && (
+          {responseLanguage !== "" && (
             <div>
               {chattingCount == 1 && (
                 <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
