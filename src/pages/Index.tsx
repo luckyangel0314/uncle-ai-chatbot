@@ -34,6 +34,7 @@ export default function Index() {
   const [showImageUpload, setShowImageUpload] = useState(false);
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [chattingCount, setChattingCount] = useState<number>(0);
 
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -366,6 +367,10 @@ export default function Index() {
         </div>
 
         <div className="w-full max-w-4xl mx-auto p-4 space-y-4">
+          if( chattingCount==0){
+            <button onClick={() => {setInputText("english") handleSendMessage()}} className="">english</button>
+            <button onClick={() => {setInputText("bangladesh") handleSendMessage() }} className="">Bangladesh</button>
+          }
           {showImageUpload && (
             <div className={`backdrop-blur-sm rounded-lg p-4 shadow-lg border border-gray-200 dark:border-gray-700 ${darkMode ? 'bg-gray-800/80 border-gray-700/50' : 'bg-white/80 border-gray-200/50'}`}>
               <ImageUpload
