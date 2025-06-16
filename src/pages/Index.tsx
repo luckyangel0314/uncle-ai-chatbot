@@ -20,13 +20,13 @@ type Message = {
   role?: string;
 };
 
-type Category = 'government' | 'culture' | 'diaspora';
+type Category = 'homework' | 'documents' | 'history' | 'news';
 
 export default function Index() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [responseLanguage, setResponseLanguage] = useState('');
   const [inputText, setInputText] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<Category>('culture');
+  const [selectedCategory, setSelectedCategory] = useState<Category>('homework');
   const [isListening, setIsListening] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -112,7 +112,7 @@ export default function Index() {
 
         setMessages(prev => [...prev, botMessage]);
       } else {
-        const response = await getChatResponse("default", inputText.trim()+". Respond to my previous sentences in "+responseLanguage+", no need to mention language.");
+        const response = await getChatResponse("default", inputText.trim(), selectedCategory, responseLanguage);
         const botMessage: Message = {
           id: (Date.now() + 1).toString(),
           content: response,
@@ -331,10 +331,10 @@ export default function Index() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="backdrop-blur-md">
-              <SelectItem value="culture">📜 Culture & History</SelectItem>
-              <SelectItem value="government">📋 Government & Law</SelectItem>
-              <SelectItem value="diaspora">🌍 Sylheti Diaspora Support</SelectItem>
-              <SelectItem value="language">🗣️ Sylheti Language & Expressions</SelectItem>
+              <SelectItem value="homework">📚 Homework</SelectItem>
+              <SelectItem value="documents">📝 Documents</SelectItem>
+              <SelectItem value="history"> 📜 History</SelectItem>
+              <SelectItem value="news"> 🗞️ News</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -393,72 +393,6 @@ export default function Index() {
           )}
           {responseLanguage !== "" && (
             <div>
-              {chattingCount == 1 && (
-                <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                  <button
-                    onClick={async () => {
-                      setInputText("You are a homework assistor.");
-                      await handleSendMessage();
-                    }}
-                    className={`transition-all duration-300 transform hover:scale-105 ${
-                      darkMode
-                        ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-green-500/30"
-                        : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-400/30"
-                    } text-white shadow-lg disabled:transform-none disabled:hover:scale-100`}
-                    style={{ margin: "3px", padding: "5px", borderRadius: "3px"}}
-                  >
-                    You are a homework assistor.
-                  </button>
-                  <button
-                    onClick={async () => {
-                      setInputText("You are an officer.");
-                      await handleSendMessage();
-                    }}
-                    className={`transition-all duration-300 transform hover:scale-105 ${
-                      darkMode
-                        ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-green-500/30"
-                        : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-400/30"
-                    } text-white shadow-lg disabled:transform-none disabled:hover:scale-100`}
-                    style={{ margin: "3px", padding: "5px", borderRadius: "3px"}}
-                  >
-                    You are an officer.
-                  </button>
-                </div>
-              )}
-
-              {chattingCount != 0 &&chattingCount != 1 && (
-                <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                  <button
-                    onClick={async () => {
-                      setInputText("Give me news about sylheti");
-                      await handleSendMessage();
-                    }}
-                    className={`transition-all duration-300 transform hover:scale-105 ${
-                      darkMode
-                        ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-green-500/30"
-                        : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-400/30"
-                    } text-white shadow-lg disabled:transform-none disabled:hover:scale-100`}
-                    style={{ margin: "3px", padding: "5px", borderRadius: "3px"}}
-                  >
-                    Give me news about sylheti
-                  </button>
-                  <button
-                    onClick={async () => {
-                      setInputText("What is happend in sylheti?");
-                      await handleSendMessage();
-                    }}
-                    className={`transition-all duration-300 transform hover:scale-105 ${
-                      darkMode
-                        ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-green-500/30"
-                        : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-400/30"
-                    } text-white shadow-lg disabled:transform-none disabled:hover:scale-100`}
-                    style={{ margin: "3px", padding: "5px", borderRadius: "3px"}}
-                  >
-                    What is happend in sylheti?
-                  </button>
-                </div>
-              )}
-
               {showImageUpload && (
                 <div className={`backdrop-blur-sm rounded-lg p-4 shadow-lg border border-gray-200 dark:border-gray-700 ${darkMode ? 'bg-gray-800/80 border-gray-700/50' : 'bg-white/80 border-gray-200/50'}`}>
                   <ImageUpload
