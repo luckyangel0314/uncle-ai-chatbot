@@ -1,5 +1,6 @@
 import React from 'react'
 import { useState, useRef, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -75,7 +76,7 @@ export default function Index() {
   };
 
   const handleSendMessage = async (text: string) => {
-    if (!inputText.trim() && selectedImages.length === 0 || text=="") return;
+    if (!inputText.trim() && selectedImages.length === 0 || text == "") return;
     setShowImageUpload(false)
     handleImageUpload(selectedImages)
     const newMessage: Message = {
@@ -123,7 +124,7 @@ export default function Index() {
         };
         setMessages(prev => [...prev, botMessage]);
       }
-      setChattingCount(chattingCount+1)
+      setChattingCount(chattingCount + 1)
     } catch (error) {
       console.error('Error processing message:', error);
       const errorMessage: Message = {
@@ -245,7 +246,7 @@ export default function Index() {
           : `${darkMode ? 'bg-gray-800/70 border-gray-700/50 text-green-300 shadow-gray-900/20' : 'bg-white/70 border-gray-200/50 text-gray-800 shadow-gray-200/20'} backdrop-blur-sm shadow-lg`
           }`}>
           <p className="text-sm leading-relaxed whitespace-pre-wrap">
-            {message.content}
+            <ReactMarkdown>{message.content}</ReactMarkdown>
           </p>
           {message.images && message.images.length > 0 && (
             <div className="grid grid-cols-2 gap-2 mt-2">
@@ -367,12 +368,11 @@ export default function Index() {
                 onClick={async () => {
                   setResponseLanguage("english");
                 }}
-                className={`transition-all duration-300 transform hover:scale-105 ${
-                  darkMode
-                    ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-green-500/30"
-                    : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-400/30"
-                } text-white shadow-lg disabled:transform-none disabled:hover:scale-100`}
-                style={{ margin: "3px", padding: "5px", borderRadius: "3px"}}
+                className={`transition-all duration-300 transform hover:scale-105 ${darkMode
+                  ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-green-500/30"
+                  : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-400/30"
+                  } text-white shadow-lg disabled:transform-none disabled:hover:scale-100`}
+                style={{ margin: "3px", padding: "5px", borderRadius: "3px" }}
               >
                 what is up?
               </button>
@@ -380,12 +380,11 @@ export default function Index() {
                 onClick={async () => {
                   setResponseLanguage("bangladesh");
                 }}
-                className={`transition-all duration-300 transform hover:scale-105 ${
-                  darkMode
-                    ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-green-500/30"
-                    : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-400/30"
-                } text-white shadow-lg disabled:transform-none disabled:hover:scale-100`}
-                style={{ margin: "3px", padding: "5px", borderRadius: "3px"}}
+                className={`transition-all duration-300 transform hover:scale-105 ${darkMode
+                  ? "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-green-500/30"
+                  : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-green-400/30"
+                  } text-white shadow-lg disabled:transform-none disabled:hover:scale-100`}
+                style={{ margin: "3px", padding: "5px", borderRadius: "3px" }}
               >
                 কি খবর?
               </button>
@@ -449,7 +448,7 @@ export default function Index() {
                     </Button>
                   </div>
                 </div>
-                
+
               </div>
 
               <p className={`text-xs mt-2 transition-all duration-300 ${darkMode ? 'text-gray-400' : 'text-gray-600'} text-center ${isSpeaking ? 'animate-pulse' : ''}`}>
@@ -457,7 +456,7 @@ export default function Index() {
               </p>
             </div>
           )}
-          
+
         </div>
       </div>
     </div>
